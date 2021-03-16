@@ -1,5 +1,5 @@
 import axios from 'axios';
-const URL_BASE = 'http://localhost:5000/progress/';
+const URL_BASE = 'http://localhost:7000/progress/';
 
 export const getInfoReq = () => axios.get(URL_BASE);
 
