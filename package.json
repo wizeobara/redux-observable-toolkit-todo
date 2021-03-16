@@ -26,6 +26,7 @@
     "redux": "^4.0.4",
     "redux-actions": "^2.6.5",
     "redux-observable": "^1.2.0",
+    "rxjs": "^6.6.6",
     "rxjs-compat": "^6.5.3",
     "sass": "^1.32.8",
     "typesafe-actions": "^5.1.0",
@@ -52,6 +53,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "engines": {
+    "node": "14.16.0"
   },
   "devDependencies": {
     "@types/history": "^4.7.3",

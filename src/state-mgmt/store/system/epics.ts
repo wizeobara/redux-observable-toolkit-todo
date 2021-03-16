@@ -12,26 +12,18 @@ import {
 import { ActionType } from 'typesafe-actions';
 
 import {
+  start,
+  fail,
   getInfo,
-  getInfoStart,
   getInfoSuccess,
-  getInfoFailed,
   addInfo,
-  addInfoStart,
   addInfoSuccess,
-  addInfoFailed,
   editInfo,
-  editInfoStart,
   editInfoSuccess,
-  editInfoFailed,
   deleteInfo,
-  deleteInfoStart,
   deleteInfoSuccess,
-  deleteInfoFailed,
   completeInfo,
-  completeInfoStart,
   completeInfoSuccess,
-  completeInfoFailed,
 } from './slice';
 
 import { RootState, store } from '../index';
@@ -45,21 +37,18 @@ import {
 } from '../../../services/api/api';
 
 type SourceActions =
-  | typeof getInfoStart
+  | typeof start
+  | typeof fail
+  | typeof getInfo
   | typeof getInfoSuccess
-  | typeof getInfoFailed
-  | typeof addInfoStart
+  | typeof addInfo
   | typeof addInfoSuccess
-  | typeof addInfoFailed
-  | typeof editInfoStart
+  | typeof editInfo
   | typeof editInfoSuccess
-  | typeof editInfoFailed
-  | typeof deleteInfoStart
+  | typeof deleteInfo
   | typeof deleteInfoSuccess
-  | typeof deleteInfoFailed
-  | typeof completeInfoStart
-  | typeof completeInfoSuccess
-  | typeof completeInfoFailed;
+  | typeof completeInfo
+  | typeof completeInfoSuccess;
 type Action = ActionType<SourceActions>;
 
 export const getInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -68,8 +57,8 @@ export const getInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     mergeMap(() =>
       from(getInfoReq()).pipe(
         map((response) => getInfoSuccess(response.data)),
-        startWith(getInfoStart()),
-        catchError(() => of(getInfoFailed()))
+        startWith(start()),
+        catchError(() => of(fail()))
       )
     )
   );
@@ -80,8 +69,8 @@ export const addInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     mergeMap((action) =>
       from(addInfoReq(action.payload)).pipe(
         map((response) => addInfoSuccess(response.data)),
-        startWith(addInfoStart()),
-        catchError(() => of(addInfoFailed()))
+        startWith(start()),
+        catchError(() => of(fail()))
       )
     ),
     tap(() => store.dispatch(getInfo()))
@@ -102,8 +91,8 @@ export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         completeInfoReq(action.payload)
       ).pipe(
         map((response) => completeInfoSuccess(response)),
-        startWith(completeInfoStart()),
-        catchError(() => of(completeInfoFailed()))
+        startWith(start()),
+        catchError(() => of(fail()))
       )
     ),
     tap(() => store.dispatch(getInfo()))
@@ -123,8 +112,8 @@ export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         editInfoReq(action.payload)
       ).pipe(
         map((response) => editInfoSuccess(response)),
-        startWith(editInfoStart()),
-        catchError(() => of(editInfoFailed()))
+        startWith(start()),
+        catchError(() => of(fail()))
       )
     ),
     tap(() => store.dispatch(getInfo()))
@@ -136,8 +125,8 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     mergeMap((action) =>
       from(deleteInfoReq(action.payload)).pipe(
         map((response) => deleteInfoSuccess(response)),
-        startWith(deleteInfoStart()),
-        catchError(() => of(deleteInfoFailed()))
+        startWith(start()),
+        catchError(() => of(fail()))
       )
     ),
     tap(() => store.dispatch(getInfo()))

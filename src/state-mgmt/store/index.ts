@@ -1,57 +1,51 @@
 import systemReducer, {
-  getInfoStart,
+  start,
+  fail,
+  getInfo,
   getInfoSuccess,
-  getInfoFailed,
-  addInfoStart,
+  addInfo,
   addInfoSuccess,
-  addInfoFailed,
-  editInfoStart,
+  editInfo,
   editInfoSuccess,
-  editInfoFailed,
-  deleteInfoStart,
+  deleteInfo,
   deleteInfoSuccess,
-  deleteInfoFailed,
-  completeInfoStart,
+  completeInfo,
   completeInfoSuccess,
-  completeInfoFailed,
-} from "./system/slice";
-import {compose, createStore, applyMiddleware} from "redux"
+} from './system/slice';
+import { compose, createStore, applyMiddleware } from 'redux';
 import {
   combineReducers,
   // configureStore,
-} from "@reduxjs/toolkit";
-import { createBrowserHistory } from "history";
-import { combineEpics, createEpicMiddleware } from "redux-observable";
+} from '@reduxjs/toolkit';
+import { createBrowserHistory } from 'history';
+import { combineEpics, createEpicMiddleware } from 'redux-observable';
 import {
   getInfoEpic,
   addInfoEpic,
   completeInfoEpic,
   deleteInfoEpic,
   editInfoEpic,
-} from "./system/epics";
-import { ActionType } from "typesafe-actions";
+} from './system/epics';
+import { ActionType } from 'typesafe-actions';
 import {
   connectRouter,
   // routerMiddleware,
   RouterState,
-} from "connected-react-router";
+} from 'connected-react-router';
 
 type SystemActionsWithPayload =
-  | typeof getInfoStart
+  | typeof start
+  | typeof fail
+  | typeof getInfo
   | typeof getInfoSuccess
-  | typeof getInfoFailed
-  | typeof addInfoStart
+  | typeof addInfo
   | typeof addInfoSuccess
-  | typeof addInfoFailed
-  | typeof editInfoStart
+  | typeof editInfo
   | typeof editInfoSuccess
-  | typeof editInfoFailed
-  | typeof deleteInfoStart
+  | typeof deleteInfo
   | typeof deleteInfoSuccess
-  | typeof deleteInfoFailed
-  | typeof completeInfoStart
-  | typeof completeInfoSuccess
-  | typeof completeInfoFailed;
+  | typeof completeInfo
+  | typeof completeInfoSuccess;
 
 type SystemActions = ActionType<SystemActionsWithPayload>;
 
@@ -77,8 +71,8 @@ const epicMiddleware = createEpicMiddleware<
   RootState
 >();
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-
+const composeEnhancers =
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // function configureAppStore(initialState?: any) {
 //   // configure middlewares
@@ -94,6 +88,7 @@ const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ||
 // export const store = configureAppStore();
 
 export const store = createStore(
-  rootReducer,composeEnhancers(applyMiddleware(epicMiddleware))
-)
+  rootReducer,
+  composeEnhancers(applyMiddleware(epicMiddleware))
+);
 epicMiddleware.run(epics);
