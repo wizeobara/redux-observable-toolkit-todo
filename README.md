@@ -1,3 +1,4 @@
+# Redux-observable-toolkit-todo
 # React with Hooks + TypeScript + Redux-Observable + Material-UI
 
 
@@ -7,11 +8,8 @@
 - RxJS (https://rxjs-dev.firebaseapp.com/api)
 - redux-observable ( https://github.com/mitsuruog/react-redux-observable-typescript-sample, https://redux-observable.js.org/docs/basics/Epics.html )
 - material-ui ( https://material-ui.com/components/box/ )
-- CSS Grid ( https://css-tricks.com/snippets/css/complete-guide-grid/ )
 - Redux toolkit ( https://redux-toolkit.js.org/ )
 
-## Code Structure
-I recommend going through the code as it is pretty self explanatory and requires no prior knowledge of design patterns to understand.
 
 ## State Management (Redux)
 Application state is split mainly in three parts.
@@ -24,7 +22,6 @@ Fundamental pieces to build partial root state are:
 
 - slice
 - epics
-- types
 
 ## *slices*
 All of actions possible under that partial root state shall be placed here. This slice will create Reducer and its corresponding actions. Example:
@@ -66,22 +63,9 @@ export const doLoginEpic: Epic<Action, Action, RootState> = action$ =>
     )
   );
 ```
-## *types*
-All input and state interfaces can be placed here. Example:
-```javascript
-export interface ISystemState {
-  readonly admin: Boolean;
-  readonly status: string;
-  readonly token: string;
-  readonly temp: string;
-}
+## API 
+This project sends and fetches data from backend server using Node.js/Express/MongoDB. The repo for the backend server can be found on github(https://github.com/wizeobara/todo-server).
 
-export interface IUserInput {
-  readonly username: string;
-  readonly password: string;
-}
-```
-  
 ## Installation
 
 ### `npm install`

@@ -1,42 +1,124 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUserInput, ISystemState, ICurrentUser } from "./types";
+import { createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../../store/index";
 
-type SliceState = ISystemState & ICurrentUser;
 
-const initState: SliceState = {
-  admin: false,
-  status: "",
-  token: "",
-  name: ""
+interface TaskState {
+  isLoading: boolean;
+  tasks: { _id: string; title: string; completed: boolean }[];
+  selectedTask: { _id: string; title: string; completed: boolean };
+  isModalOpen: boolean;
+  _id: string;
+  title: string;
+  completed: boolean;
+}
+
+const initialState: TaskState = {
+  isLoading: false,
+  tasks: [],
+  selectedTask: { _id: "", title: "", completed: false },
+  isModalOpen: false,
+  _id: "",
+  title: "",
+  completed: false,
 };
+
+function startLoading(state: TaskState) {
+  state.isLoading = true;
+}
+
+function loadingFailed(state: TaskState) {
+  state.isLoading = false;
+}
 
 const systemSlice = createSlice({
   name: "system",
-  initialState: initState as SliceState,
+  initialState: initialState as TaskState,
   reducers: {
-    requestLoginAction: (state, action: PayloadAction<IUserInput>) => {},
-    requestLoginSuccessAction: (state, action: PayloadAction<ISystemState>) => {
-      const { admin, status, token } = action.payload;
-      state.admin = admin;
-      state.status = status;
-      state.token = token;
+    switchModal: (state, action) => {
+      state.isModalOpen = action.payload;
     },
-    requestCurrentUserActionSuccess: (
-      state,
-      action: PayloadAction<ICurrentUser>
-    ) => {
-      const name = action.payload.name;
-      state.name = name;
+    getInfo: () => {
+      console.log("Axios Request")
     },
-    requestLoginActionFailure: (state, action: PayloadAction<Error>) => {}
-  }
+    getInfoStart: startLoading,
+    getInfoSuccess: (state, action) => {
+      state.tasks = action.payload;
+    },
+    getInfoFailed: loadingFailed,
+    addInfo: (state, action) => {
+      state.title = action.payload;
+    },
+    addInfoStart: startLoading,
+    addInfoSuccess: (state, action) => {
+      console.log(action.payload);
+    },
+    addInfoFailed: loadingFailed,
+    editInfo: (state, action) => {
+      state._id = action.payload._id;
+      state.title = action.payload.title;
+    },
+    editInfoStart: startLoading,
+    editInfoSuccess: (state, action) => {
+      console.log(action.payload);
+    },
+    editInfoFailed: loadingFailed,
+    deleteInfo: (state, action) => {
+      state._id = action.payload;
+    },
+    deleteInfoStart: startLoading,
+    deleteInfoSuccess: (state, action) => {
+      console.log(action.payload);
+    },
+    deleteInfoFailed: loadingFailed,
+    completeInfo: (state, action) => {
+      state._id = action.payload._id;
+      state.completed = action.payload.completed;
+    },
+    completeInfoStart: startLoading,
+    completeInfoSuccess: (state, action) => {
+      console.log(action.payload);
+    },
+    completeInfoFailed: loadingFailed,
+    selectTask: (state, action) => {
+      state.selectedTask = action.payload;
+    },
+    handleModalOpen: (state, action) => {
+      state.isModalOpen = action.payload;
+    },
+  },
 });
 
 export const {
-  requestLoginAction,
-  requestLoginSuccessAction,
-  requestCurrentUserActionSuccess,
-  requestLoginActionFailure
+  switchModal,
+  getInfo,
+  getInfoStart,
+  getInfoSuccess,
+  getInfoFailed,
+  addInfo,
+  addInfoStart,
+  addInfoSuccess,
+  addInfoFailed,
+  editInfo,
+  editInfoStart,
+  editInfoSuccess,
+  editInfoFailed,
+  deleteInfo,
+  deleteInfoStart,
+  deleteInfoSuccess,
+  deleteInfoFailed,
+  completeInfo,
+  completeInfoStart,
+  completeInfoSuccess,
+  completeInfoFailed,
+  selectTask,
+  handleModalOpen,
 } = systemSlice.actions;
+
+export const selectTasks = (state: RootState): TaskState["tasks"] =>
+  state.system.tasks;
+export const getTaskData = (state: RootState): TaskState["selectedTask"] =>
+  state.system.selectedTask;
+export const selectIsModalOpen = (state: RootState): TaskState["isModalOpen"] =>
+  state.system.isModalOpen;
 
 export default systemSlice.reducer;

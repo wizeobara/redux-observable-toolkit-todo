@@ -1,27 +1,69 @@
-import systemReducer, { requestLoginAction, requestLoginSuccessAction, requestCurrentUserActionSuccess, requestLoginActionFailure } from "./system/slice";
-
-import { combineReducers, configureStore } from "@reduxjs/toolkit";
+import systemReducer, {
+  getInfoStart,
+  getInfoSuccess,
+  getInfoFailed,
+  addInfoStart,
+  addInfoSuccess,
+  addInfoFailed,
+  editInfoStart,
+  editInfoSuccess,
+  editInfoFailed,
+  deleteInfoStart,
+  deleteInfoSuccess,
+  deleteInfoFailed,
+  completeInfoStart,
+  completeInfoSuccess,
+  completeInfoFailed,
+} from "./system/slice";
+import {compose, createStore, applyMiddleware} from "redux"
+import {
+  combineReducers,
+  // configureStore,
+} from "@reduxjs/toolkit";
 import { createBrowserHistory } from "history";
 import { combineEpics, createEpicMiddleware } from "redux-observable";
-import { doLoginEpic } from "./system/epics";
+import {
+  getInfoEpic,
+  addInfoEpic,
+  completeInfoEpic,
+  deleteInfoEpic,
+  editInfoEpic,
+} from "./system/epics";
 import { ActionType } from "typesafe-actions";
 import {
   connectRouter,
-  routerMiddleware,
-  RouterState
+  // routerMiddleware,
+  RouterState,
 } from "connected-react-router";
 
 type SystemActionsWithPayload =
-  | typeof requestLoginAction
-  | typeof requestLoginSuccessAction
-  | typeof requestCurrentUserActionSuccess
-  | typeof requestLoginActionFailure;
+  | typeof getInfoStart
+  | typeof getInfoSuccess
+  | typeof getInfoFailed
+  | typeof addInfoStart
+  | typeof addInfoSuccess
+  | typeof addInfoFailed
+  | typeof editInfoStart
+  | typeof editInfoSuccess
+  | typeof editInfoFailed
+  | typeof deleteInfoStart
+  | typeof deleteInfoSuccess
+  | typeof deleteInfoFailed
+  | typeof completeInfoStart
+  | typeof completeInfoSuccess
+  | typeof completeInfoFailed;
 
 type SystemActions = ActionType<SystemActionsWithPayload>;
 
 type finalActions = SystemActions;
 
-const epics = combineEpics(doLoginEpic);
+const epics = combineEpics(
+  getInfoEpic,
+  addInfoEpic,
+  completeInfoEpic,
+  deleteInfoEpic,
+  editInfoEpic
+);
 
 export const history = createBrowserHistory<RouterState>();
 export const rootReducer = combineReducers({
@@ -35,16 +77,23 @@ const epicMiddleware = createEpicMiddleware<
   RootState
 >();
 
-function configureAppStore(initialState?: any) {
-  // configure middlewares
-  const middlewares = [routerMiddleware(history), epicMiddleware];
-  // create store
-  return configureStore<RootState>({
-    reducer: rootReducer,
-    middleware: middlewares,
-    preloadedState: initialState
-  });
-}
+const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-export const store = configureAppStore();
+
+// function configureAppStore(initialState?: any) {
+//   // configure middlewares
+//   const middlewares = [routerMiddleware(history), composeEnhancers(epicMiddleware)];
+//   // create store
+//   return configureStore<RootState>({
+//     reducer: rootReducer,
+//     middleware: middlewares,
+//     preloadedState: initialState,
+//   });
+// }
+
+// export const store = configureAppStore();
+
+export const store = createStore(
+  rootReducer,composeEnhancers(applyMiddleware(epicMiddleware))
+)
 epicMiddleware.run(epics);

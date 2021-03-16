@@ -1,11 +1,13 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 
-// Container component for all major components in main page
-// 1. Side Panel
-// 2. navbar
-// 3. main content page
 export const Home: React.FC = () => {
     return (
-        <div>Hello</div>
+        <div>
+        <h1>I am hungry...</h1>
+        <Link to="/">back to main page</Link>
+      </div>
     )
 }
+
+export default Home;
