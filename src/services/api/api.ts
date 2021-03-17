@@ -21,3 +21,6 @@ export const editInfoReq = async (args: { _id: string; title: string }) =>
   axios.post(URL_BASE + 'update/' + args._id, {
     title: args.title,
   });
+
+export const paramsInfoReq = async (args: string) =>
+  axios.get(URL_BASE + args);

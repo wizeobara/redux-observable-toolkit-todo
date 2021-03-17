@@ -9,6 +9,7 @@ import { BrowserRouter, Switch, Route } from 'react-router-dom';
 // import { ConnectedRouter } from "connected-react-router";
 import { Home } from './pages/home/Home';
 import Header from './components/header/Header';
+import TaskFilter from "./components/taskFilter/TaskFilter"
 
 // entry point to attach react app to root of the element
 // Also point of linkage for redux store and react-router definitions
@@ -19,6 +20,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={App} />
         <Route path="/sub" component={Home} />
+        <Route path="/:id" component={TaskFilter}/>
       </Switch>
     </BrowserRouter>
   </Provider>,

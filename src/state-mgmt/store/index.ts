@@ -11,6 +11,8 @@ import systemReducer, {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess,
 } from './system/slice';
 import { compose, createStore, applyMiddleware } from 'redux';
 import {
@@ -25,6 +27,7 @@ import {
   completeInfoEpic,
   deleteInfoEpic,
   editInfoEpic,
+  paramsInfoEpic,
 } from './system/epics';
 import { ActionType } from 'typesafe-actions';
 import {
@@ -45,7 +48,9 @@ type SystemActionsWithPayload =
   | typeof deleteInfo
   | typeof deleteInfoSuccess
   | typeof completeInfo
-  | typeof completeInfoSuccess;
+  | typeof completeInfoSuccess
+  | typeof paramsInfo
+  | typeof paramsInfoSuccess;
 
 type SystemActions = ActionType<SystemActionsWithPayload>;
 
@@ -56,7 +61,8 @@ const epics = combineEpics(
   addInfoEpic,
   completeInfoEpic,
   deleteInfoEpic,
-  editInfoEpic
+  editInfoEpic,
+  paramsInfoEpic,
 );
 
 export const history = createBrowserHistory<RouterState>();

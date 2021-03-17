@@ -70,6 +70,12 @@ const systemSlice = createSlice({
     completeInfoSuccess: (state, action) => {
       console.log(action.payload);
     },
+    paramsInfo: (state, action) => {
+      state._id = action.payload;
+    },
+    paramsInfoSuccess: (state, action) => {
+      state.selectedTask = action.payload.data;
+    },
     selectTask: (state, action) => {
       state.selectedTask = action.payload;
     },
@@ -93,6 +99,8 @@ export const {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess,
   selectTask,
   handleModalOpen,
 } = systemSlice.actions;

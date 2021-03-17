@@ -24,6 +24,8 @@ import {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess
 } from './slice';
 
 import { RootState, store } from '../index';
@@ -34,6 +36,7 @@ import {
   completeInfoReq,
   deleteInfoReq,
   editInfoReq,
+  paramsInfoReq,
 } from '../../../services/api/api';
 
 type SourceActions =
@@ -125,6 +128,19 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     mergeMap((action) =>
       from(deleteInfoReq(action.payload)).pipe(
         map((response) => deleteInfoSuccess(response)),
+        startWith(start()),
+        catchError(() => of(fail()))
+      )
+    ),
+    tap(() => store.dispatch(getInfo()))
+  );
+
+  export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
+  action$.pipe(
+    filter(paramsInfo.match),
+    mergeMap((action) =>
+      from(paramsInfoReq(action.payload)).pipe(
+        map((response) => paramsInfoSuccess(response)),
         startWith(start()),
         catchError(() => of(fail()))
       )
