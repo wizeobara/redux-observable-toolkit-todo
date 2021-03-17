@@ -24,11 +24,10 @@ import {
   completeInfo,
   completeInfoSuccess,
   paramsInfo,
-  paramsInfoSuccess
+  paramsInfoSuccess,
 } from './slice';
 
 import { RootState, store } from '../index';
-// import axios from 'axios';
 import {
   getInfoReq,
   addInfoReq,
@@ -84,9 +83,7 @@ export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(completeInfo.match),
     mergeMap((action) =>
-      from(
-        completeInfoReq(action.payload)
-      ).pipe(
+      from(completeInfoReq(action.payload)).pipe(
         map((response) => completeInfoSuccess(response)),
         startWith(start()),
         catchError(() => of(fail()))
@@ -99,9 +96,7 @@ export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(editInfo.match),
     mergeMap((action) =>
-      from(
-        editInfoReq(action.payload)
-      ).pipe(
+      from(editInfoReq(action.payload)).pipe(
         map((response) => editInfoSuccess(response)),
         startWith(start()),
         catchError(() => of(fail()))
@@ -123,7 +118,7 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     tap(() => store.dispatch(getInfo(username)))
   );
 
-  export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
+export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(paramsInfo.match),
     mergeMap((action) =>

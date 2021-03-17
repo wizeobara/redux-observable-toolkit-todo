@@ -1,7 +1,7 @@
 import axios from 'axios';
 const URL_BASE = 'http://localhost:5000/progress/';
 
-//Changed Get => Put since sending body 
+//Changed Get => Put since sending body
 export const getInfoReq = async (args: string) =>
   axios.put(URL_BASE, { user: args });
 

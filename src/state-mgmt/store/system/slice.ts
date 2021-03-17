@@ -1,10 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store/index';
 
+interface selectedTask {
+  _id: string;
+  title:string;
+  completed: boolean;
+  child: selectedTask[]
+}
 interface TaskState {
   isLoading: boolean;
-  tasks: { _id: string; title: string; completed: boolean }[];
-  selectedTask: { _id: string; title: string; completed: boolean };
+  tasks: { _id: string; title: string; completed: boolean; child: selectedTask[] }[];
+  selectedTask: { _id: string; title: string; completed: boolean; child: selectedTask[] };
   isModalOpen: boolean;
   _id: string;
   title: string;
@@ -15,7 +21,7 @@ interface TaskState {
 const initialState: TaskState = {
   isLoading: false,
   tasks: [],
-  selectedTask: { _id: '', title: '', completed: false },
+  selectedTask: { _id: '', title: '', completed: false, child: [] },
   isModalOpen: false,
   _id: '',
   title: '',
