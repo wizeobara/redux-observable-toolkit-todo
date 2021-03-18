@@ -8,9 +8,10 @@ import styles from './TaskList.module.scss';
 const TaskList: React.FC = () => {
   const dispatch = useDispatch();
   const tasks = useSelector(selectTasks);
+  const username = sessionStorage.getItem('usertoken');
 
   useEffect(() => {
-    dispatch(getInfo());
+    dispatch(getInfo(username));
   }, [dispatch]);
 
   return (

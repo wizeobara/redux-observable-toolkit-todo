@@ -6,7 +6,6 @@ import {
   filter,
   map,
   catchError,
-  // mergeMapTo,
   tap,
 } from 'rxjs/operators';
 import { ActionType } from 'typesafe-actions';
@@ -54,11 +53,13 @@ type SourceActions =
   | typeof completeInfoSuccess;
 type Action = ActionType<SourceActions>;
 
+const username = sessionStorage.getItem('usertoken');
+
 export const getInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(getInfo.match),
-    mergeMap(() =>
-      from(getInfoReq()).pipe(
+    mergeMap((action) =>
+      from(getInfoReq(action.payload)).pipe(
         map((response) => getInfoSuccess(response.data)),
         startWith(start()),
         catchError(() => of(fail()))
@@ -76,8 +77,7 @@ export const addInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
-    // mergeMapTo([getInfoStart()])
+    tap(() => store.dispatch(getInfo(username)))
   );
 
 export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -85,12 +85,6 @@ export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     filter(completeInfo.match),
     mergeMap((action) =>
       from(
-        // axios.post(
-        //   `http://localhost:5000/progress/complete/${action.payload._id}`,
-        //   {
-        //     completed: action.payload.completed,
-        //   }
-        // )
         completeInfoReq(action.payload)
       ).pipe(
         map((response) => completeInfoSuccess(response)),
@@ -98,7 +92,7 @@ export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username)))
   );
 
 export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -106,12 +100,6 @@ export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
     filter(editInfo.match),
     mergeMap((action) =>
       from(
-        // axios.post(
-        //   `http://localhost:5000/progress/update/${action.payload._id}`,
-        //   {
-        //     title: action.payload.title,
-        //   }
-        // )
         editInfoReq(action.payload)
       ).pipe(
         map((response) => editInfoSuccess(response)),
@@ -119,7 +107,7 @@ export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username)))
   );
 
 export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -132,7 +120,7 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username)))
   );
 
   export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -145,5 +133,5 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username)))
   );

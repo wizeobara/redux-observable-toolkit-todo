@@ -25,7 +25,8 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
   const { register, handleSubmit, reset } = useForm();
 
   const handleCreate = (data: Inputs) => {
-    const newTodo = { title: data.taskTitle, completed: false };
+    const username = sessionStorage.getItem('usertoken')
+    const newTodo = { title: data.taskTitle, completed: false, user: username };
     console.log(newTodo)
     dispatch(addInfo(newTodo));
     console.log(newTodo)
