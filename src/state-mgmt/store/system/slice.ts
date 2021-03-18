@@ -9,6 +9,7 @@ interface TaskState {
   _id: string;
   title: string;
   completed: boolean;
+  user: string;
 }
 
 const initialState: TaskState = {
@@ -19,6 +20,7 @@ const initialState: TaskState = {
   _id: '',
   title: '',
   completed: false,
+  user:''
 };
 
 function startLoading(state: TaskState) {
@@ -38,8 +40,8 @@ const systemSlice = createSlice({
     switchModal: (state, action) => {
       state.isModalOpen = action.payload;
     },
-    getInfo: () => {
-      console.log('Axios Request');
+    getInfo: (state,action) => {
+      state.user = action.payload;
     },
     getInfoSuccess: (state, action) => {
       state.tasks = action.payload;
