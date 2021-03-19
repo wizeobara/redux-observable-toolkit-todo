@@ -2,7 +2,6 @@ import React from 'react';
 import TaskList from '../../components/taskList/TaskList';
 import TaskForm from '../../components/taskForm/TaskForm';
 import { Link } from 'react-router-dom';
-import { colors } from '@material-ui/core';
 
 import styles from './Main.module.scss';
 
