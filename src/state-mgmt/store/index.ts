@@ -11,7 +11,17 @@ import systemReducer, {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess,
+  paramsInfoAdd,
+  paramsInfoAddSuccess,
 } from './system/slice';
+import userReducer, {
+  login,
+  loginSuccess,
+  logout,
+  logoutSuccess,
+} from './login/slice';
 import { compose, createStore, applyMiddleware } from 'redux';
 import {
   combineReducers,
@@ -25,7 +35,10 @@ import {
   completeInfoEpic,
   deleteInfoEpic,
   editInfoEpic,
+  paramsInfoEpic,
+  paramsInfoAddEpic,
 } from './system/epics';
+import { loginEpic, logoutEpic } from './login/epics';
 import { ActionType } from 'typesafe-actions';
 import {
   connectRouter,
@@ -45,24 +58,38 @@ type SystemActionsWithPayload =
   | typeof deleteInfo
   | typeof deleteInfoSuccess
   | typeof completeInfo
-  | typeof completeInfoSuccess;
+  | typeof completeInfoSuccess
+  | typeof paramsInfo
+  | typeof paramsInfoSuccess
+  | typeof paramsInfoAdd
+  | typeof paramsInfoAddSuccess;
+type LoginActionsWithPayload =
+  | typeof login
+  | typeof logout
+  | typeof loginSuccess
+  | typeof logoutSuccess;
 
 type SystemActions = ActionType<SystemActionsWithPayload>;
-
-type finalActions = SystemActions;
+type LoginActions = ActionType<LoginActionsWithPayload>;
+type finalActions = SystemActions | LoginActions;
 
 const epics = combineEpics(
   getInfoEpic,
   addInfoEpic,
   completeInfoEpic,
   deleteInfoEpic,
-  editInfoEpic
+  editInfoEpic,
+  paramsInfoEpic,
+  paramsInfoAddEpic,
+  loginEpic,
+  logoutEpic
 );
 
 export const history = createBrowserHistory<RouterState>();
 export const rootReducer = combineReducers({
   router: connectRouter(history),
   system: systemReducer,
+  user: userReducer,
 });
 export type RootState = ReturnType<typeof rootReducer>;
 const epicMiddleware = createEpicMiddleware<

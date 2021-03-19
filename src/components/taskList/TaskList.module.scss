@@ -1,5 +1,18 @@
 .root {
-    height: 50vh;
-    overflow: hidden;
-    overflow-y: auto;
+  height: 50vh;
+  overflow: hidden;
+  overflow-y: auto;
+  .container {
+    display: flex;
+    justify-content: flex-end;
+    .title {
+      margin: 0 1rem;
+      border: none;
+      outline:none;
+      &:hover {
+        font-weight: bold;
+        color:red;
+      }
+    }
   }
+}

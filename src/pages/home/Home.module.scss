@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  .link {
+    color: black;
+    text-decoration: none;
+    align-self: flex-end;
+    margin:2rem;
+    &:hover {
+      color: red;
+      font-weight: bold;
+    }
+  }
+}

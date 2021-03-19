@@ -1,0 +1,30 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 30vw;
+    .text_field {
+      margin: 1rem;
+    }
+    .submit_button {
+      margin-bottom: 10px;
+      background-color: #ffd5c9;
+      color: #ffffff;
+      width: 100%;
+      height: 40px;
+      font-weight: bold;
+      font-size: 15px;
+      border: none;
+      border-radius: 5px;
+
+      &:hover {
+        cursor: pointer;
+        color: red;
+      }
+    }
+  }
+}

@@ -1,22 +1,24 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useForm } from "react-hook-form";
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
 import {
   getTaskData,
   addInfo,
   editInfo,
   switchModal,
-} from "../../state-mgmt/store/system/slice";
-import styles from "./TaskForm.module.scss";
-import TextField from "@material-ui/core/TextField";
+} from '../../state-mgmt/store/system/slice';
+import styles from './TaskForm.module.scss';
+import TextField from '@material-ui/core/TextField';
 
 type Inputs = {
   _id: string;
+  user: string;
   taskTitle: string;
 };
 
 type PropTypes = {
   edit?: boolean;
+  addChild?: boolean;
 };
 
 const TaskForm: React.FC<PropTypes> = ({ edit }) => {
@@ -25,10 +27,11 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
   const { register, handleSubmit, reset } = useForm();
 
   const handleCreate = (data: Inputs) => {
-    const newTodo = { title: data.taskTitle, completed: false };
-    console.log(newTodo)
+    const username = sessionStorage.getItem('usertoken');
+    const newTodo = { title: data.taskTitle, completed: false, user: username };
+    console.log(newTodo);
     dispatch(addInfo(newTodo));
-    console.log(newTodo)
+    console.log(newTodo);
     reset();
   };
 
@@ -41,11 +44,10 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
     <div className={styles.root}>
       <form
         onSubmit={edit ? handleSubmit(handleEdit) : handleSubmit(handleCreate)}
-        className={styles.form}
-      >
+        className={styles.form}>
         <TextField
-          label={edit ? "EDIT TASK" : "ADD TASK"}
-          defaultValue={edit ? selectedTask.title : ""}
+          label={edit ? 'EDIT TASK' : 'ADD TASK'}
+          defaultValue={edit ? selectedTask.title : ''}
           variant="outlined"
           inputRef={register}
           name="taskTitle"
@@ -59,8 +61,7 @@ const TaskForm: React.FC<PropTypes> = ({ edit }) => {
             <button
               type="button"
               onClick={() => dispatch(switchModal(false))}
-              className={styles.cancel_button}
-            >
+              className={styles.cancel_button}>
               Cancel
             </button>
           </div>

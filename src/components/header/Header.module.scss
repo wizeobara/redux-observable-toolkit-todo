@@ -1,10 +1,33 @@
-.root{
-    .app_bar{
-        box-shadow: none;
-        background-color: #f1f2f7;
-        color: #282828;
-        .tool_bar {
-            padding: 0;
-        }
+.root {
+  .app_bar {
+    box-shadow: none;
+    background-color: #f1f2f7;
+    color: #282828;
+    .link {
+      text-decoration: none;
+      color: #282828;
+      &:hover {
+        font-weight: bold;
+      }
     }
+    .tool_bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 0;
+      .button {
+        width: 20%;
+        height: 30px;
+        font-weight: bold;
+        font-size: 15px;
+        border: none;
+        border-radius: 5px;
+        background-color: #ffd5c9;
+        color: #ffffff;
+        &:hover {
+          cursor: pointer;
+          color: red;
+        }
+      }
+    }
+  }
 }

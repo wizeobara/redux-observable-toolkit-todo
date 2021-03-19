@@ -1,24 +1,74 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { RootState } from '../../store/index';
 
+export interface FileNode {
+  _id: string;
+  completed: boolean;
+  title: string;
+  user: string;
+  updatedAt: string;
+  createdAt: string;
+  child?: FileNode[];
+  __v?: number;
+}
+
+interface selectedTask {
+  _id: string;
+  title: string;
+  completed: boolean;
+  child: selectedTask[];
+}
 interface TaskState {
   isLoading: boolean;
-  tasks: { _id: string; title: string; completed: boolean }[];
-  selectedTask: { _id: string; title: string; completed: boolean };
+  FileNode: {
+    _id: string;
+    completed: boolean;
+    title: string;
+    user: string;
+    updatedAt: string;
+    createdAt: string;
+    child?: FileNode[];
+    __v?: number;
+  };
+  tasks: {
+    _id: string;
+    title: string;
+    completed: boolean;
+    child: selectedTask[];
+  }[];
+  selectedTask: {
+    _id: string;
+    title: string;
+    completed: boolean;
+    user: string;
+    child: selectedTask[];
+  };
   isModalOpen: boolean;
   _id: string;
   title: string;
   completed: boolean;
+  user: string;
 }
 
 const initialState: TaskState = {
   isLoading: false,
+  FileNode: {
+    _id: '',
+    completed: false,
+    title: '',
+    user: '',
+    updatedAt: '',
+    createdAt: '',
+    child: [],
+    __v: 0,
+  },
   tasks: [],
-  selectedTask: { _id: '', title: '', completed: false },
+  selectedTask: { _id: '', title: '', completed: false, user: '', child: [] },
   isModalOpen: false,
   _id: '',
   title: '',
   completed: false,
+  user: '',
 };
 
 function startLoading(state: TaskState) {
@@ -38,21 +88,26 @@ const systemSlice = createSlice({
     switchModal: (state, action) => {
       state.isModalOpen = action.payload;
     },
-    getInfo: () => {
-      console.log('Axios Request');
+    getInfo: (state, action) => {
+      state.user = action.payload;
     },
     getInfoSuccess: (state, action) => {
       state.tasks = action.payload;
     },
     addInfo: (state, action) => {
-      state.title = action.payload;
+      // state.title = action.payload;
+      return Object.assign({}, state, { title: action.payload });
     },
     addInfoSuccess: (state, action) => {
       console.log(action.payload);
     },
     editInfo: (state, action) => {
-      state._id = action.payload._id;
-      state.title = action.payload.title;
+      // state._id = action.payload._id;
+      // state.title = action.payload.title;
+      return Object.assign({}, state, {
+        _id: action.payload._id,
+        title: action.payload.title,
+      });
     },
     editInfoSuccess: (state, action) => {
       console.log(action.payload);
@@ -70,11 +125,24 @@ const systemSlice = createSlice({
     completeInfoSuccess: (state, action) => {
       console.log(action.payload);
     },
+    paramsInfo: (state, action) => {
+      state._id = action.payload;
+    },
+    paramsInfoSuccess: (state, action) => {
+      state.FileNode = action.payload.data;
+    },
     selectTask: (state, action) => {
       state.selectedTask = action.payload;
     },
     handleModalOpen: (state, action) => {
       state.isModalOpen = action.payload;
+    },
+    paramsInfoAdd: (state, action) => {
+      state._id = action.payload._id;
+      state.title = action.payload.title;
+    },
+    paramsInfoAddSuccess: (state, action) => {
+      console.log(action.payload);
     },
   },
 });
@@ -93,8 +161,12 @@ export const {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess,
   selectTask,
   handleModalOpen,
+  paramsInfoAdd,
+  paramsInfoAddSuccess,
 } = systemSlice.actions;
 
 export const selectTasks = (state: RootState): TaskState['tasks'] =>
@@ -103,5 +175,6 @@ export const getTaskData = (state: RootState): TaskState['selectedTask'] =>
   state.system.selectedTask;
 export const selectIsModalOpen = (state: RootState): TaskState['isModalOpen'] =>
   state.system.isModalOpen;
-
+export const rooting = (state: RootState): TaskState['FileNode'] =>
+  state.system.FileNode;
 export default systemSlice.reducer;

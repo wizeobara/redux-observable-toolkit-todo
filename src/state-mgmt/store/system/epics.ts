@@ -6,7 +6,6 @@ import {
   filter,
   map,
   catchError,
-  // mergeMapTo,
   tap,
 } from 'rxjs/operators';
 import { ActionType } from 'typesafe-actions';
@@ -24,16 +23,21 @@ import {
   deleteInfoSuccess,
   completeInfo,
   completeInfoSuccess,
+  paramsInfo,
+  paramsInfoSuccess,
+  paramsInfoAdd,
+  paramsInfoAddSuccess,
 } from './slice';
 
 import { RootState, store } from '../index';
-// import axios from 'axios';
 import {
   getInfoReq,
   addInfoReq,
   completeInfoReq,
   deleteInfoReq,
   editInfoReq,
+  paramsInfoReq,
+  paramsInfoAddReq,
 } from '../../../services/api/api';
 
 type SourceActions =
@@ -48,14 +52,21 @@ type SourceActions =
   | typeof deleteInfo
   | typeof deleteInfoSuccess
   | typeof completeInfo
-  | typeof completeInfoSuccess;
+  | typeof completeInfoSuccess
+  | typeof paramsInfo
+  | typeof paramsInfoSuccess
+  | typeof paramsInfoAdd
+  | typeof paramsInfoAddSuccess;
 type Action = ActionType<SourceActions>;
+
+const username = sessionStorage.getItem('usertoken');
+const params = window.location.pathname.slice(1);
 
 export const getInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(getInfo.match),
-    mergeMap(() =>
-      from(getInfoReq()).pipe(
+    mergeMap((action) =>
+      from(getInfoReq(action.payload)).pipe(
         map((response) => getInfoSuccess(response.data)),
         startWith(start()),
         catchError(() => of(fail()))
@@ -73,50 +84,35 @@ export const addInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
-    // mergeMapTo([getInfoStart()])
+    tap(() => store.dispatch(getInfo(username)))
   );
 
 export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(completeInfo.match),
     mergeMap((action) =>
-      from(
-        // axios.post(
-        //   `http://localhost:5000/progress/complete/${action.payload._id}`,
-        //   {
-        //     completed: action.payload.completed,
-        //   }
-        // )
-        completeInfoReq(action.payload)
-      ).pipe(
+      from(completeInfoReq(action.payload)).pipe(
         map((response) => completeInfoSuccess(response)),
         startWith(start()),
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
 
 export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
     filter(editInfo.match),
     mergeMap((action) =>
-      from(
-        // axios.post(
-        //   `http://localhost:5000/progress/update/${action.payload._id}`,
-        //   {
-        //     title: action.payload.title,
-        //   }
-        // )
-        editInfoReq(action.payload)
-      ).pipe(
+      from(editInfoReq(action.payload)).pipe(
         map((response) => editInfoSuccess(response)),
         startWith(start()),
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
 
 export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -129,5 +125,31 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo()))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
+  );
+
+export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
+  action$.pipe(
+    filter(paramsInfo.match),
+    mergeMap((action) =>
+      from(paramsInfoReq(action.payload)).pipe(
+        map((response) => paramsInfoSuccess(response)),
+        startWith(start()),
+        catchError(() => of(fail()))
+      )
+    )
+  );
+
+export const paramsInfoAddEpic: Epic<Action, Action, RootState> = (action$) =>
+  action$.pipe(
+    filter(paramsInfoAdd.match),
+    mergeMap((action) =>
+      from(paramsInfoAddReq(action.payload)).pipe(
+        map((response) => paramsInfoAddSuccess(response)),
+        startWith(start()),
+        catchError(() => of(fail()))
+      )
+    ),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
