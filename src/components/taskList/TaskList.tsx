@@ -12,7 +12,7 @@ const TaskList: React.FC = () => {
 
   useEffect(() => {
     dispatch(getInfo(username));
-  }, [dispatch]);
+  }, [dispatch, username]);
 
   return (
     <div className={styles.root}>

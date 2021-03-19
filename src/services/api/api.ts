@@ -28,3 +28,16 @@ export const editInfoReq = async (args: { _id: string; title: string }) =>
   });
 
 export const paramsInfoReq = async (args: string) => axios.get(URL_BASE + args);
+
+export const paramsInfoAddReq = async (args: {
+  user: string;
+  _id: string;
+  title: string;
+}) =>
+  axios.post(URL_BASE + args._id, {
+    child:{
+      user: args.user,
+      title: args.title,
+      completed:false,
+    }
+  });

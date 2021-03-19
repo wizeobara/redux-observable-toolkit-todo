@@ -13,8 +13,15 @@ import systemReducer, {
   completeInfoSuccess,
   paramsInfo,
   paramsInfoSuccess,
+  paramsInfoAdd,
+  paramsInfoAddSuccess,
 } from './system/slice';
-import userReducer, { login, loginSuccess, logout } from './login/slice';
+import userReducer, {
+  login,
+  loginSuccess,
+  logout,
+  logoutSuccess,
+} from './login/slice';
 import { compose, createStore, applyMiddleware } from 'redux';
 import {
   combineReducers,
@@ -29,6 +36,7 @@ import {
   deleteInfoEpic,
   editInfoEpic,
   paramsInfoEpic,
+  paramsInfoAddEpic,
 } from './system/epics';
 import { loginEpic, logoutEpic } from './login/epics';
 import { ActionType } from 'typesafe-actions';
@@ -52,8 +60,14 @@ type SystemActionsWithPayload =
   | typeof completeInfo
   | typeof completeInfoSuccess
   | typeof paramsInfo
-  | typeof paramsInfoSuccess;
-type LoginActionsWithPayload = typeof login | typeof logout | typeof loginSuccess;
+  | typeof paramsInfoSuccess
+  | typeof paramsInfoAdd
+  | typeof paramsInfoAddSuccess;
+type LoginActionsWithPayload =
+  | typeof login
+  | typeof logout
+  | typeof loginSuccess
+  | typeof logoutSuccess;
 
 type SystemActions = ActionType<SystemActionsWithPayload>;
 type LoginActions = ActionType<LoginActionsWithPayload>;
@@ -66,6 +80,7 @@ const epics = combineEpics(
   deleteInfoEpic,
   editInfoEpic,
   paramsInfoEpic,
+  paramsInfoAddEpic,
   loginEpic,
   logoutEpic
 );

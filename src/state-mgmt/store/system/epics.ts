@@ -25,6 +25,8 @@ import {
   completeInfoSuccess,
   paramsInfo,
   paramsInfoSuccess,
+  paramsInfoAdd,
+  paramsInfoAddSuccess,
 } from './slice';
 
 import { RootState, store } from '../index';
@@ -35,6 +37,7 @@ import {
   deleteInfoReq,
   editInfoReq,
   paramsInfoReq,
+  paramsInfoAddReq,
 } from '../../../services/api/api';
 
 type SourceActions =
@@ -49,10 +52,15 @@ type SourceActions =
   | typeof deleteInfo
   | typeof deleteInfoSuccess
   | typeof completeInfo
-  | typeof completeInfoSuccess;
+  | typeof completeInfoSuccess
+  | typeof paramsInfo
+  | typeof paramsInfoSuccess
+  | typeof paramsInfoAdd
+  | typeof paramsInfoAddSuccess;
 type Action = ActionType<SourceActions>;
 
 const username = sessionStorage.getItem('usertoken');
+const params = window.location.pathname.slice(1);
 
 export const getInfoEpic: Epic<Action, Action, RootState> = (action$) =>
   action$.pipe(
@@ -89,7 +97,8 @@ export const completeInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo(username)))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
 
 export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -102,7 +111,8 @@ export const editInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo(username)))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
 
 export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -115,7 +125,8 @@ export const deleteInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         catchError(() => of(fail()))
       )
     ),
-    tap(() => store.dispatch(getInfo(username)))
+    tap(() => store.dispatch(getInfo(username))),
+    tap(() => store.dispatch(paramsInfo(params)))
   );
 
 export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
@@ -127,6 +138,18 @@ export const paramsInfoEpic: Epic<Action, Action, RootState> = (action$) =>
         startWith(start()),
         catchError(() => of(fail()))
       )
+    )
+  );
+
+export const paramsInfoAddEpic: Epic<Action, Action, RootState> = (action$) =>
+  action$.pipe(
+    filter(paramsInfoAdd.match),
+    mergeMap((action) =>
+      from(paramsInfoAddReq(action.payload)).pipe(
+        map((response) => paramsInfoAddSuccess(response)),
+        startWith(start()),
+        catchError(() => of(fail()))
+      )
     ),
-    tap(() => store.dispatch(getInfo(username)))
+    tap(() => store.dispatch(paramsInfo(params)))
   );
