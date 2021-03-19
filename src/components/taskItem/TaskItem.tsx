@@ -48,7 +48,9 @@ const TaskItem: React.FC<PropTypes> = ({ task }) => {
       <div className={styles.title}>
         <EventNoteIcon />
         <Link to={task._id} className={styles.title_text}>
-          {task.title}
+          <button onClick={() => dispatch(selectTask(task._id))}>
+            {task.title}
+          </button>
         </Link>
       </div>
       <div className={styles.right_item}>
