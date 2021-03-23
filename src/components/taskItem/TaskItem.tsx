@@ -1,9 +1,12 @@
 import React from 'react';
+import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '@material-ui/core/Checkbox';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import EditIcon from '@material-ui/icons/Edit';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Modal from '@material-ui/core/Modal';
 import TaskForm from '../taskForm/TaskForm';
@@ -13,16 +16,22 @@ import {
   completeInfo,
   switchModal,
   selectTask,
+  changeDueDate,
 } from '../../state-mgmt/store/system/slice';
 import styles from './TaskItem.module.scss';
 
 interface PropTypes {
-  task: { _id: string; title: string; completed: boolean };
+  task: { _id: string; title: string; completed: boolean; date: string };
 }
+
 
 const TaskItem: React.FC<PropTypes> = ({ task }) => {
   const isModalOpen = useSelector(selectIsModalOpen);
   const dispatch = useDispatch();
+
+  const today = new Date()
+  const todayDate = moment(today).format('YYYY-MM-DD')
+  
 
   const handleOpen = () => {
     dispatch(selectTask(task));
@@ -48,12 +57,28 @@ const TaskItem: React.FC<PropTypes> = ({ task }) => {
       <div className={styles.title}>
         <EventNoteIcon />
         <Link to={task._id} className={styles.title_text}>
-          <button className={styles.title_button} onClick={() => dispatch(selectTask(task._id))}>
+          <button
+            className={styles.title_button}
+            onClick={() => dispatch(selectTask(task._id))}>
             {task.title}
           </button>
         </Link>
       </div>
-      <div className={styles.right_item}>
+      <div className={styles.right_item}>   
+        <div className={todayDate.replace(/-/g, '') > task.date.replace(/-/g,'') ? styles.yabai: todayDate.replace(/-/g, '') === task.date.replace(/-/g,'')? styles.yaba : styles.mada}>
+          <p className={styles.date_label}>Due:</p>
+          <DatePicker
+            selected={new Date(task.date)}
+            onChange={(date: Date) =>
+              dispatch(
+                changeDueDate({
+                  date: moment(date).format('YYYY-MM-DD'),
+                  _id: task._id,
+                })
+              )
+            }
+          />
+        </div>
         <Checkbox
           checked={task.completed}
           onClick={() => completeTask()}

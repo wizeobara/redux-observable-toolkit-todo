@@ -27,6 +27,8 @@ import {
   paramsInfoSuccess,
   paramsInfoAdd,
   paramsInfoAddSuccess,
+  changeDueDate,
+  changeDueDateSuccess
 } from './slice';
 
 import { RootState, store } from '../index';
@@ -38,6 +40,7 @@ import {
   editInfoReq,
   paramsInfoReq,
   paramsInfoAddReq,
+  changeDueDateReq
 } from '../../../services/api/api';
 
 type SourceActions =
@@ -56,7 +59,9 @@ type SourceActions =
   | typeof paramsInfo
   | typeof paramsInfoSuccess
   | typeof paramsInfoAdd
-  | typeof paramsInfoAddSuccess;
+  | typeof paramsInfoAddSuccess
+  | typeof changeDueDate
+  | typeof changeDueDateSuccess;
 type Action = ActionType<SourceActions>;
 
 const username = sessionStorage.getItem('usertoken');
@@ -152,4 +157,17 @@ export const paramsInfoAddEpic: Epic<Action, Action, RootState> = (action$) =>
       )
     ),
     tap(() => store.dispatch(paramsInfo(params)))
+  );
+
+export const changeDueDateEpic: Epic<Action, Action, RootState> = (action$) =>
+  action$.pipe(
+    filter(changeDueDate.match),
+    mergeMap((action) =>
+      from(changeDueDateReq(action.payload)).pipe(
+        map((response) => changeDueDateSuccess(response)),
+        startWith(start()),
+        catchError(() => of(fail()))
+      )
+    ),
+    tap(() => store.dispatch(getInfo(username)))
   );

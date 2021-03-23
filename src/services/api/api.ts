@@ -1,5 +1,5 @@
 import axios from 'axios';
-const URL_BASE = 'http://localhost:5000/progress/';
+const URL_BASE = 'http://localhost:7000/progress/';
 
 //Changed Get => Put since sending body
 export const getInfoReq = async (args: string) =>
@@ -35,9 +35,17 @@ export const paramsInfoAddReq = async (args: {
   title: string;
 }) =>
   axios.post(URL_BASE + args._id, {
-    child:{
+    child: {
       user: args.user,
       title: args.title,
-      completed:false,
-    }
+      completed: false,
+    },
+  });
+
+export const changeDueDateReq = async (args: {
+  _id: string;
+  date: string;
+}) =>
+  axios.post(URL_BASE + 'date/' + args._id, {
+    date: args.date,
   });

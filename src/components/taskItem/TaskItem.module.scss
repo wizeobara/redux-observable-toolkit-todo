@@ -6,7 +6,10 @@
   background-color: #ffffff;
   padding: 10px 20px;
   margin-bottom: 10px;
-
+  .date_label {
+    font-size: 10px;
+    margin: 0;
+  }
   .title {
     display: flex;
     align-items: center;
@@ -29,7 +32,16 @@
   .right_item {
     display: flex;
     align-items: center;
-
+    .yabai{
+      border:solid;
+      border-color:red;
+      margin:2px;
+    }
+    .yaba{
+      border:solid;
+      border-color: yellow;
+      margin:2px;
+    }
     .edit_button,
     .delete_button {
       border: none;

@@ -15,6 +15,8 @@ import systemReducer, {
   paramsInfoSuccess,
   paramsInfoAdd,
   paramsInfoAddSuccess,
+  changeDueDate,
+  changeDueDateSuccess
 } from './system/slice';
 import userReducer, {
   login,
@@ -37,6 +39,7 @@ import {
   editInfoEpic,
   paramsInfoEpic,
   paramsInfoAddEpic,
+  changeDueDateEpic
 } from './system/epics';
 import { loginEpic, logoutEpic } from './login/epics';
 import { ActionType } from 'typesafe-actions';
@@ -62,7 +65,10 @@ type SystemActionsWithPayload =
   | typeof paramsInfo
   | typeof paramsInfoSuccess
   | typeof paramsInfoAdd
-  | typeof paramsInfoAddSuccess;
+  | typeof paramsInfoAddSuccess
+  | typeof changeDueDate
+  | typeof changeDueDateSuccess;
+
 type LoginActionsWithPayload =
   | typeof login
   | typeof logout
@@ -82,7 +88,8 @@ const epics = combineEpics(
   paramsInfoEpic,
   paramsInfoAddEpic,
   loginEpic,
-  logoutEpic
+  logoutEpic,
+  changeDueDateEpic
 );
 
 export const history = createBrowserHistory<RouterState>();

@@ -8,6 +8,7 @@ export interface FileNode {
   user: string;
   updatedAt: string;
   createdAt: string;
+  date: string;
   child?: FileNode[];
   __v?: number;
 }
@@ -16,9 +17,12 @@ interface selectedTask {
   _id: string;
   title: string;
   completed: boolean;
+  user: string;
+  date: string;
   child: selectedTask[];
 }
 interface TaskState {
+  date: string;
   isLoading: boolean;
   FileNode: {
     _id: string;
@@ -27,6 +31,7 @@ interface TaskState {
     user: string;
     updatedAt: string;
     createdAt: string;
+    date: string;
     child?: FileNode[];
     __v?: number;
   };
@@ -34,6 +39,7 @@ interface TaskState {
     _id: string;
     title: string;
     completed: boolean;
+    date: '';
     child: selectedTask[];
   }[];
   selectedTask: {
@@ -41,6 +47,7 @@ interface TaskState {
     title: string;
     completed: boolean;
     user: string;
+    date: '';
     child: selectedTask[];
   };
   isModalOpen: boolean;
@@ -51,6 +58,7 @@ interface TaskState {
 }
 
 const initialState: TaskState = {
+  date: '',
   isLoading: false,
   FileNode: {
     _id: '',
@@ -59,11 +67,19 @@ const initialState: TaskState = {
     user: '',
     updatedAt: '',
     createdAt: '',
+    date: '',
     child: [],
     __v: 0,
   },
   tasks: [],
-  selectedTask: { _id: '', title: '', completed: false, user: '', child: [] },
+  selectedTask: {
+    _id: '',
+    title: '',
+    completed: false,
+    user: '',
+    date: '',
+    child: [],
+  },
   isModalOpen: false,
   _id: '',
   title: '',
@@ -102,8 +118,6 @@ const systemSlice = createSlice({
       console.log(action.payload);
     },
     editInfo: (state, action) => {
-      // state._id = action.payload._id;
-      // state.title = action.payload.title;
       return Object.assign({}, state, {
         _id: action.payload._id,
         title: action.payload.title,
@@ -144,6 +158,13 @@ const systemSlice = createSlice({
     paramsInfoAddSuccess: (state, action) => {
       console.log(action.payload);
     },
+    changeDueDate: (state, action) => {
+      state._id = action.payload._id;
+      state.date = action.payload.date;
+    },
+    changeDueDateSuccess: (state, action) => {
+      console.log(action.payload);
+    },
   },
 });
 
@@ -167,6 +188,8 @@ export const {
   handleModalOpen,
   paramsInfoAdd,
   paramsInfoAddSuccess,
+  changeDueDate,
+  changeDueDateSuccess,
 } = systemSlice.actions;
 
 export const selectTasks = (state: RootState): TaskState['tasks'] =>
