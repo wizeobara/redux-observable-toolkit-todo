@@ -1,0 +1,35 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  target-branch: develop
+  versioning-strategy: increase-if-necessary
+  ignore:
+  - dependency-name: "@types/node"
+    versions:
+    - 14.14.35
+    - 14.14.36
+  - dependency-name: "@testing-library/user-event"
+    versions:
+    - 13.0.10
+    - 13.0.11
+    - 13.0.12
+    - 13.0.13
+    - 13.0.14
+    - 13.0.15
+    - 13.0.6
+    - 13.0.7
+    - 13.0.8
+    - 13.0.9
+  - dependency-name: sinon
+    versions:
+    - 9.2.4
+  - dependency-name: react
+    versions:
+    - 17.0.1
+  - dependency-name: "@types/jest"
+    versions:
+    - 26.0.21
